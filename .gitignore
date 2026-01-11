@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Server Code (NEVER COMMIT)
+wincloud_server/
+server_config.json
+ssh_keys/
+*.pem
+*.key
+database_credentials.json
+
+# Secrets
+.env
+secrets/
+config/production.json
+api_keys.txt
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build
+*.exe
+*.msi
+*.dmg
+*.deb
+
+# User Data
+user_data/
+cache/
+temp/
+*.wca
+archives/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Private assets (if any)
+assets/private/
