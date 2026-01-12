@@ -235,92 +235,16 @@ class WinCloudMainWindow(QMainWindow):
         create_btn = QPushButton("📦 Create Archive")
         create_btn.setObjectName("primaryButton")
         create_btn.setMinimumHeight(48)
-        create_btn.clicked.connect(self.create_archive_dialog)
+        create_btn.clicked.connect(self.create_archive)
         button_layout.addWidget(create_btn)
         
         # Extract Archive button
         extract_btn = QPushButton("📂 Extract Archive")
         extract_btn.setMinimumHeight(48)
-        extract_btn.clicked.connect(self.extract_archive_dialog)
+        extract_btn.clicked.connect(self.extract_archive)
         button_layout.addWidget(extract_btn)
         
         layout.addWidget(button_widget)
-        add_files_action.setShortcut("Ctrl+O")
-        add_files_action.triggered.connect(self.add_files)
-        file_menu.addAction(add_files_action)
-        
-        add_folder_action = QAction("Add Folder", self)
-        add_folder_action.triggered.connect(self.add_folder)
-        file_menu.addAction(add_folder_action)
-        
-        file_menu.addSeparator()
-        
-        exit_action = QAction("Exit", self)
-        exit_action.setShortcut("Ctrl+Q")
-        exit_action.triggered.connect(self.close)
-        file_menu.addAction(exit_action)
-        
-        # Commands menu
-        commands_menu = menubar.addMenu("&Commands")
-        
-        compress_action = QAction("Create Archive", self)
-        compress_action.setShortcut("Ctrl+A")
-        compress_action.triggered.connect(self.create_archive)
-        commands_menu.addAction(compress_action)
-        
-        extract_action = QAction("Extract Archive", self)
-        extract_action.setShortcut("Ctrl+E")
-        extract_action.triggered.connect(self.extract_archive)
-        commands_menu.addAction(extract_action)
-        
-        # Tools menu
-        tools_menu = menubar.addMenu("&Tools")
-        
-        settings_action = QAction("Settings", self)
-        settings_action.triggered.connect(self.open_settings)
-        tools_menu.addAction(settings_action)
-        
-        # Help menu
-        help_menu = menubar.addMenu("&Help")
-        
-        about_action = QAction("About", self)
-        about_action.triggered.connect(self.show_about)
-        help_menu.addAction(about_action)
-    
-    def create_toolbar(self):
-        """Create application toolbar"""
-        toolbar = QToolBar("Main Toolbar")
-        toolbar.setMovable(False)
-        self.addToolBar(toolbar)
-        
-        # Add Files button
-        add_btn = QPushButton("Add Files")
-        add_btn.clicked.connect(self.add_files)
-        toolbar.addWidget(add_btn)
-        
-        # Add Folder button
-        folder_btn = QPushButton("Add Folder")
-        folder_btn.clicked.connect(self.add_folder)
-        toolbar.addWidget(folder_btn)
-        
-        toolbar.addSeparator()
-        
-        # Create Archive button
-        compress_btn = QPushButton("Create Archive")
-        compress_btn.clicked.connect(self.create_archive)
-        toolbar.addWidget(compress_btn)
-        
-        # Extract Archive button
-        extract_btn = QPushButton("Extract Archive")
-        extract_btn.clicked.connect(self.extract_archive)
-        toolbar.addWidget(extract_btn)
-        
-        toolbar.addSeparator()
-        
-        # Clear button
-        clear_btn = QPushButton("Clear List")
-        clear_btn.clicked.connect(self.clear_files)
-        toolbar.addWidget(clear_btn)
     
     def create_file_browser(self, parent):
         """Create file browser tree"""
