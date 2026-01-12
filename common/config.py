@@ -20,7 +20,7 @@ class Config:
         """Load configuration from file"""
         # Default configuration
         default_config = {
-            'server_url': 'https://5.249.160.54:8443',
+            'server_url': 'http://5.249.160.54:8443',
             'api_version': 'v1',
             'compression_level': 9,
             'split_ratio': {
@@ -37,7 +37,7 @@ class Config:
                 'chunk_size': 5242880  # 5MB
             },
             'ui': {
-                'theme': 'light',
+                'theme': 'dark',  # 'dark' or 'light'
                 'language': 'en'
             }
         }

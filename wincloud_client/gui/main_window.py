@@ -1,5 +1,5 @@
 """
-Main Window GUI for WinCloud - WinRAR-like interface
+Main Window GUI for WinCloud - Liquid Glass Design
 """
 import os
 from PyQt6.QtWidgets import (
@@ -8,11 +8,13 @@ from PyQt6.QtWidgets import (
     QMenu, QToolBar, QFileDialog, QMessageBox, QStatusBar, QSplitter,
     QTextEdit, QGroupBox
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QPoint
 from PyQt6.QtGui import QIcon, QAction, QPixmap
 
 from wincloud_client.core.compression_engine import CompressionEngine
 from wincloud_client.core.network_client import NetworkClient
+from wincloud_client.gui.styles import get_dark_theme, get_light_theme
+from common.config import Config
 from common.logger import get_logger
 
 logger = get_logger('MainWindow')
@@ -63,7 +65,7 @@ class CompressionThread(QThread):
 
 
 class WinCloudMainWindow(QMainWindow):
-    """Main application window"""
+    """Main application window with Liquid Glass design"""
     
     def __init__(self):
         super().__init__()
@@ -71,76 +73,178 @@ class WinCloudMainWindow(QMainWindow):
         self.network_client = NetworkClient()
         self.current_thread = None
         self.selected_files = []
+        self.config = Config()
+        self.is_dark_theme = self.config.get('ui', {}).get('theme', 'dark') == 'dark'
+        
+        # Frameless window
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        
+        # For window dragging
+        self.dragging = False
+        self.offset = QPoint()
         
         self.init_ui()
+        self.apply_theme()
         self.check_server_connection()
     
+    def mousePressEvent(self, event):
+        """Handle mouse press for window dragging"""
+        if event.button() == Qt.MouseButton.LeftButton:
+            if hasattr(self, 'title_bar') and event.position().toPoint().y() < 50:
+                self.dragging = True
+                self.offset = event.position().toPoint()
+    
+    def mouseMoveEvent(self, event):
+        """Handle mouse move for window dragging"""
+        if self.dragging:
+            self.move(self.pos() + event.position().toPoint() - self.offset)
+    
+    def mouseReleaseEvent(self, event):
+        """Handle mouse release"""
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.dragging = False
+    
     def init_ui(self):
-        """Initialize user interface"""
+        """Initialize user interface with Liquid Glass design"""
         self.setWindowTitle("WinCloud - Cloud Archiver")
         self.setGeometry(100, 100, 1200, 800)
         
-        # Set window icon
-        icon_path = os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'wincloud.png')
-        if os.path.exists(icon_path):
-            self.setWindowIcon(QIcon(icon_path))
+        # Main container
+        container = QWidget()
+        container.setObjectName("mainContainer")
+        self.setCentralWidget(container)
         
-        # Create menu bar
-        self.create_menu_bar()
+        main_layout = QVBoxLayout(container)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
         
-        # Create toolbar
-        self.create_toolbar()
+        # Custom title bar
+        self.create_title_bar()
+        main_layout.addWidget(self.title_bar)
         
-        # Create central widget
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+        # Content area
+        content_widget = QWidget()
+        content_widget.setObjectName("glassPanel")
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setContentsMargins(16, 16, 16, 16)
+        content_layout.setSpacing(12)
         
-        # Main layout
-        main_layout = QVBoxLayout(central_widget)
+        # Toolbar with actions
+        self.create_action_buttons(content_layout)
         
-        # Top section: Logo and title
-        self.create_header(main_layout)
-        
-        # Middle section: File browser
+        # Top section: File browser
         splitter = QSplitter(Qt.Orientation.Vertical)
         self.create_file_browser(splitter)
         self.create_progress_section(splitter)
-        main_layout.addWidget(splitter)
+        content_layout.addWidget(splitter, 1)
+        
+        main_layout.addWidget(content_widget, 1)
         
         # Status bar
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
         self.update_status("Ready")
     
-    def create_header(self, layout):
-        """Create header with logo"""
-        header_widget = QWidget()
-        header_layout = QHBoxLayout(header_widget)
+    def create_title_bar(self):
+        """Create custom frameless title bar"""
+        self.title_bar = QWidget()
+        self.title_bar.setObjectName("titleBar")
+        self.title_bar.setFixedHeight(46)
         
-        # Logo
-        logo_label = QLabel()
-        logo_path = os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'wincloud2.png')
-        if os.path.exists(logo_path):
-            pixmap = QPixmap(logo_path)
-            logo_label.setPixmap(pixmap.scaled(64, 64, Qt.AspectRatioMode.KeepAspectRatio))
+        title_layout = QHBoxLayout(self.title_bar)
+        title_layout.setContentsMargins(16, 0, 8, 0)
+        title_layout.setSpacing(8)
         
-        # Title
-        title_label = QLabel("<h1>WinCloud</h1><p>Cloud-Based File Archiver</p>")
+        # App icon and title
+        title_label = QLabel(" 🌥️  WinCloud")
+        title_label.setObjectName("titleLabel")
+        title_layout.addWidget(title_label)
         
-        header_layout.addWidget(logo_label)
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
+        title_layout.addStretch()
         
-        layout.addWidget(header_widget)
+        # Theme toggle button
+        self.theme_btn = QPushButton("☀️" if self.is_dark_theme else "🌙")
+        self.theme_btn.setObjectName("titleButton")
+        self.theme_btn.setToolTip("Toggle Theme")
+        self.theme_btn.setFixedSize(36, 36)
+        self.theme_btn.clicked.connect(self.toggle_theme)
+        title_layout.addWidget(self.theme_btn)
+        
+        # Minimize button
+        min_btn = QPushButton("−")
+        min_btn.setObjectName("titleButton")
+        min_btn.setFixedSize(36, 36)
+        min_btn.clicked.connect(self.showMinimized)
+        title_layout.addWidget(min_btn)
+        
+        # Maximize button
+        self.max_btn = QPushButton("□")
+        self.max_btn.setObjectName("titleButton")
+        self.max_btn.setFixedSize(36, 36)
+        self.max_btn.clicked.connect(self.toggle_maximize)
+        title_layout.addWidget(self.max_btn)
+        
+        # Close button
+        close_btn = QPushButton("✕")
+        close_btn.setObjectName("closeButton")
+        close_btn.setFixedSize(36, 36)
+        close_btn.clicked.connect(self.close)
+        title_layout.addWidget(close_btn)
     
-    def create_menu_bar(self):
-        """Create application menu bar"""
-        menubar = self.menuBar()
+    def toggle_maximize(self):
+        """Toggle window maximize/restore"""
+        if self.isMaximized():
+            self.showNormal()
+            self.max_btn.setText("□")
+        else:
+            self.showMaximized()
+            self.max_btn.setText("❐")
+    
+    def toggle_theme(self):
+        """Toggle between dark and light theme"""
+        self.is_dark_theme = not self.is_dark_theme
+        self.theme_btn.setText("☀️" if self.is_dark_theme else "🌙")
+        self.apply_theme()
         
-        # File menu
-        file_menu = menubar.addMenu("&File")
+        # Save theme preference
+        self.config.set('ui', 'theme', 'dark' if self.is_dark_theme else 'light')
+        self.config.save()
+    
+    def apply_theme(self):
+        """Apply current theme"""
+        if self.is_dark_theme:
+            self.setStyleSheet(get_dark_theme())
+        else:
+            self.setStyleSheet(get_light_theme())
+    
+    def create_action_buttons(self, layout):
+        """Create main action buttons"""
+        button_widget = QWidget()
+        button_layout = QHBoxLayout(button_widget)
+        button_layout.setSpacing(12)
         
-        add_files_action = QAction("Add Files", self)
+        # Add Files button
+        add_btn = QPushButton("➕ Add Files")
+        add_btn.setObjectName("primaryButton")
+        add_btn.setMinimumHeight(48)
+        add_btn.clicked.connect(self.add_files)
+        button_layout.addWidget(add_btn)
+        
+        # Create Archive button
+        create_btn = QPushButton("📦 Create Archive")
+        create_btn.setObjectName("primaryButton")
+        create_btn.setMinimumHeight(48)
+        create_btn.clicked.connect(self.create_archive_dialog)
+        button_layout.addWidget(create_btn)
+        
+        # Extract Archive button
+        extract_btn = QPushButton("📂 Extract Archive")
+        extract_btn.setMinimumHeight(48)
+        extract_btn.clicked.connect(self.extract_archive_dialog)
+        button_layout.addWidget(extract_btn)
+        
+        layout.addWidget(button_widget)
         add_files_action.setShortcut("Ctrl+O")
         add_files_action.triggered.connect(self.add_files)
         file_menu.addAction(add_files_action)
