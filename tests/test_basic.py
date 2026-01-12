@@ -102,7 +102,7 @@ class TestNetworkClient(unittest.TestCase):
 
 
 class TestArchiveFormat(unittest.TestCase):
-    """Test .wca archive format"""
+    """Test .cloud archive format"""
     
     def test_create_archive(self):
         """Test archive creation"""

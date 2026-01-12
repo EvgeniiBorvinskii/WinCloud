@@ -15,7 +15,7 @@
 
 - [ ] Add drag-and-drop support in GUI
 - [ ] Implement file preview in archives
-- [ ] Add context menu integration (right-click .wca files)
+- [ ] Add context menu integration (right-click .cloud files)
 - [ ] Create Windows installer with WiX
 - [ ] Add automatic update checker
 - [ ] Implement archive repair tool

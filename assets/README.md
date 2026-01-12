@@ -37,4 +37,4 @@ magick convert wincloud.png -define icon:auto-resize=256,128,64,48,32,16 winclou
 
 ## File Association
 
-When users install WinCloud, .wca files will use wincloud.ico as their icon.
+When users install WinCloud, .cloud files will use wincloud.ico as their icon.

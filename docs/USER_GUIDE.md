@@ -94,7 +94,7 @@ On first launch, WinCloud will:
 2. **Splitting**: Data is split (10% local, 90% cloud)
 3. **Encryption**: Cloud portion is encrypted
 4. **Upload**: Encrypted data uploaded to server
-5. **Finalization**: Local `.wca` file created
+5. **Finalization**: Local `.cloud` file created
 
 ### Progress Information
 
@@ -123,7 +123,7 @@ Total savings: 95.5 MB (95.5%)
 ### Basic Extraction
 
 1. Click **"Extract Archive"** or press `Ctrl+E`
-2. Select `.wca` archive file
+2. Select `.cloud` archive file
 3. Extraction starts automatically
 4. Files are restored to original location (or chosen folder)
 
@@ -260,7 +260,7 @@ Menu: **Tools** → **Settings**
 **A**: Indefinitely, unless you delete the archive or your account.
 
 ### Q: Can I share archives?
-**A**: Currently, you can share the `.wca` file, but the recipient needs access to the cloud portion (same account).
+**A**: Currently, you can share the `.cloud` file, but the recipient needs access to the cloud portion (same account).
 
 ### Q: Does WinCloud work on Mac/Linux?
 **A**: Not yet. Windows only for now. Mac/Linux support is planned.
@@ -319,9 +319,9 @@ Include:
 ### Command Line (Future)
 
 ```bash
-wincloud create archive.wca file1.txt file2.txt
-wincloud extract archive.wca
-wincloud list archive.wca
+wincloud create archive.cloud file1.txt file2.txt
+wincloud extract archive.cloud
+wincloud list archive.cloud
 ```
 
 ### Batch Processing (Future)
@@ -329,7 +329,7 @@ wincloud list archive.wca
 Create multiple archives:
 ```bash
 for file in *.zip; do
-    wincloud create "$file.wca" "$file"
+    wincloud create "$file.cloud" "$file"
 done
 ```
 
@@ -340,7 +340,7 @@ done
 1. **Organize Files**: Archive related files together
 2. **Use Folders**: Archive entire project folders
 3. **Verify Extractions**: Always check extracted files
-4. **Keep Local Copies**: Keep `.wca` files safe
+4. **Keep Local Copies**: Keep `.cloud` files safe
 5. **Monitor Progress**: Watch statistics for performance insights
 6. **Regular Backups**: Back up important archives
 7. **Clean Up**: Delete old archives from server to save space

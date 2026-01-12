@@ -337,15 +337,15 @@ class WinCloudMainWindow(QMainWindow):
             self,
             "Save Archive As",
             "",
-            "WinCloud Archive (*.wca)"
+            "WinCloud Archive (*.cloud)"
         )
         
         if not archive_path:
             return
         
-        # Ensure .wca extension
-        if not archive_path.endswith('.wca'):
-            archive_path += '.wca'
+        # Ensure .cloud extension
+        if not archive_path.endswith('.cloud'):
+            archive_path += '.cloud'
         
         # Start compression in background thread
         self.current_thread = CompressionThread(

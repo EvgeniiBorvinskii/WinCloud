@@ -19,7 +19,7 @@
 ### Extracting an Archive
 
 1. Click **"Extract Archive"**
-2. Select `.wca` file
+2. Select `.cloud` file
 3. Files will be extracted automatically
 
 That's it! See [User Guide](docs/USER_GUIDE.md) for more details.

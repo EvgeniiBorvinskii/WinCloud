@@ -42,7 +42,7 @@ class CompressionEngine:
         progress_callback: Optional[Callable] = None
     ) -> Dict:
         """
-        Create WinCloud archive (.wca)
+        Create WinCloud archive (.cloud)
         
         Args:
             file_paths: List of files to archive
@@ -276,7 +276,7 @@ class CompressionEngine:
             return {'success': False, 'error': str(e)}
     
     def _write_archive_file(self, archive_path: str, metadata: Dict, local_data: bytes):
-        """Write final .wca archive file"""
+        """Write final .cloud archive file"""
         try:
             with open(archive_path, 'wb') as f:
                 # Write magic header
@@ -309,7 +309,7 @@ class CompressionEngine:
         Extract WinCloud archive
         
         Args:
-            archive_path: Path to .wca archive
+            archive_path: Path to .cloud archive
             output_dir: Output directory (default: same as archive)
             progress_callback: Function(progress, status, stats)
         
@@ -391,7 +391,7 @@ class CompressionEngine:
             return {'success': False, 'error': str(e)}
     
     def _read_archive_file(self, archive_path: str) -> tuple:
-        """Read .wca archive file"""
+        """Read .cloud archive file"""
         try:
             with open(archive_path, 'rb') as f:
                 # Read and verify magic header

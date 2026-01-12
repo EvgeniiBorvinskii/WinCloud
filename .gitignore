@@ -65,7 +65,7 @@ desktop.ini
 user_data/
 cache/
 temp/
-*.wca
+*.cloud
 archives/
 
 # Testing

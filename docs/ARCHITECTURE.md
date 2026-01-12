@@ -78,7 +78,7 @@ WinCloud is a hybrid cloud archiver that splits compressed files into local and 
    ├─ Server stores in /srv/WinCloud/storage/
    └─ Database records metadata
    ↓
-7. Create .wca file locally
+7. Create .cloud file locally
    ├─ Header (magic + version)
    ├─ Metadata (JSON)
    └─ Local data (10%)
@@ -89,7 +89,7 @@ WinCloud is a hybrid cloud archiver that splits compressed files into local and 
 ### Archive Extraction Flow
 
 ```
-1. User opens .wca file
+1. User opens .cloud file
    ↓
 2. Read local archive
    ├─ Parse metadata
@@ -117,7 +117,7 @@ WinCloud is a hybrid cloud archiver that splits compressed files into local and 
 
 ## File Format Specification
 
-### .wca Archive Structure
+### .cloud Archive Structure
 
 ```
 ┌──────────────────────────────────────┐
@@ -221,7 +221,7 @@ WinCloud is a hybrid cloud archiver that splits compressed files into local and 
             │   └───────────────┘
             │
          ┌──▼────────────┐
-         │Store in .wca  │
+         │Store in .cloud  │
          └───────────────┘
 ```
 
