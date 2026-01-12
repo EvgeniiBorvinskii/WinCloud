@@ -1,6 +1,6 @@
 # WinCloud - Cloud-Based File Archiver
 
-![WinCloud Logo](assets/wincloud.png)
+![WinCloud Logo](assets/wincloud2.png)
 
 ## Overview
 
