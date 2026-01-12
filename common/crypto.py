@@ -3,7 +3,6 @@ Cryptography module for WinCloud
 Handles encryption/decryption of cloud data
 """
 import os
-from typing import bytes as bytes_type
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -21,7 +20,7 @@ class CryptoManager:
     Uses AES-256-GCM for authenticated encryption
     """
     
-    def __init__(self, master_key: bytes_type = None):
+    def __init__(self, master_key: bytes = None):
         """
         Initialize crypto manager
         
@@ -35,7 +34,7 @@ class CryptoManager:
         
         self.master_key = master_key
     
-    def _generate_master_key(self) -> bytes_type:
+    def _generate_master_key(self) -> bytes:
         """Generate or retrieve master encryption key"""
         key_file = os.path.join(
             os.path.expanduser('~'),
@@ -68,7 +67,7 @@ class CryptoManager:
         
         return key
     
-    def encrypt_data(self, data: bytes_type) -> bytes_type:
+    def encrypt_data(self, data: bytes) -> bytes:
         """
         Encrypt data using AES-256-GCM
         
@@ -100,7 +99,7 @@ class CryptoManager:
             logger.error(f"Encryption failed: {e}", exc_info=True)
             raise
     
-    def decrypt_data(self, encrypted_data: bytes_type) -> bytes_type:
+    def decrypt_data(self, encrypted_data: bytes) -> bytes:
         """
         Decrypt data using AES-256-GCM
         
@@ -133,7 +132,7 @@ class CryptoManager:
             logger.error(f"Decryption failed: {e}", exc_info=True)
             raise
     
-    def derive_key_from_password(self, password: str, salt: bytes_type = None) -> tuple:
+    def derive_key_from_password(self, password: str, salt: bytes = None) -> tuple:
         """
         Derive encryption key from password using PBKDF2
         
@@ -159,7 +158,7 @@ class CryptoManager:
         
         return key, salt
     
-    def hash_data(self, data: bytes_type) -> str:
+    def hash_data(self, data: bytes) -> str:
         """
         Calculate SHA-256 hash of data
         
