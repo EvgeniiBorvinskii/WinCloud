@@ -38,7 +38,9 @@ class Config:
             },
             'ui': {
                 'theme': 'dark',  # 'dark' or 'light'
-                'language': 'en'
+                'language': 'en',
+                'opacity': 1.0,  # Window opacity (0.0 - 1.0)
+                'background_transparency': False  # Enable/disable transparent background
             }
         }
         
@@ -78,15 +80,31 @@ class Config:
         
         return value
     
-    def set(self, key: str, value: Any):
-        """Set configuration value"""
-        keys = key.split('.')
-        config = self.config
+    def set(self, *args):
+        """Set configuration value - supports both set(key, value) and set(section, key, value)"""
+        if len(args) == 2:
+            # set(key, value)
+            key, value = args
+            keys = key.split('.')
+            config = self.config
+            
+            for k in keys[:-1]:
+                if k not in config:
+                    config[k] = {}
+                config = config[k]
+            
+            config[keys[-1]] = value
+        elif len(args) == 3:
+            # set(section, key, value)
+            section, key, value = args
+            if section not in self.config:
+                self.config[section] = {}
+            self.config[section][key] = value
+        else:
+            raise ValueError("set() takes 2 or 3 arguments")
         
-        for k in keys[:-1]:
-            if k not in config:
-                config[k] = {}
-            config = config[k]
-        
-        config[keys[-1]] = value
+        self._save_config(self.config)
+    
+    def save(self):
+        """Save current configuration"""
         self._save_config(self.config)

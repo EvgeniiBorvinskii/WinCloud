@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTreeWidget, 
     QTreeWidgetItem, QPushButton, QLabel, QProgressBar, QMenuBar,
     QMenu, QToolBar, QFileDialog, QMessageBox, QStatusBar, QSplitter,
-    QTextEdit, QGroupBox
+    QTextEdit, QGroupBox, QSlider, QCheckBox, QDialog
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QPoint
 from PyQt6.QtGui import QIcon, QAction, QPixmap
@@ -75,10 +75,13 @@ class WinCloudMainWindow(QMainWindow):
         self.selected_files = []
         self.config = Config()
         self.is_dark_theme = self.config.get('ui', {}).get('theme', 'dark') == 'dark'
+        self.window_opacity = self.config.get('ui', {}).get('opacity', 1.0)
+        self.background_transparency = self.config.get('ui', {}).get('background_transparency', False)
         
         # Frameless window
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        if self.background_transparency:
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         
         # For window dragging
         self.dragging = False
@@ -86,6 +89,7 @@ class WinCloudMainWindow(QMainWindow):
         
         self.init_ui()
         self.apply_theme()
+        self.apply_opacity()
         self.check_server_connection()
     
     def mousePressEvent(self, event):
@@ -163,6 +167,14 @@ class WinCloudMainWindow(QMainWindow):
         
         title_layout.addStretch()
         
+        # Settings button
+        settings_btn = QPushButton("⚙️")
+        settings_btn.setObjectName("titleButton")
+        settings_btn.setToolTip("Settings")
+        settings_btn.setFixedSize(36, 36)
+        settings_btn.clicked.connect(self.show_settings)
+        title_layout.addWidget(settings_btn)
+        
         # Theme toggle button
         self.theme_btn = QPushButton("☀️" if self.is_dark_theme else "🌙")
         self.theme_btn.setObjectName("titleButton")
@@ -203,20 +215,122 @@ class WinCloudMainWindow(QMainWindow):
     
     def toggle_theme(self):
         """Toggle between dark and light theme"""
-        self.is_dark_theme = not self.is_dark_theme
-        self.theme_btn.setText("☀️" if self.is_dark_theme else "🌙")
-        self.apply_theme()
-        
-        # Save theme preference
-        self.config.set('ui', 'theme', 'dark' if self.is_dark_theme else 'light')
-        self.config.save()
+        try:
+            self.is_dark_theme = not self.is_dark_theme
+            self.theme_btn.setText("☀️" if self.is_dark_theme else "🌙")
+            self.apply_theme()
+            
+            # Save theme preference
+            self.config.set('ui', 'theme', 'dark' if self.is_dark_theme else 'light')
+            logger.info(f"Theme changed to {'dark' if self.is_dark_theme else 'light'}")
+        except Exception as e:
+            logger.error(f"Error toggling theme: {e}", exc_info=True)
+            QMessageBox.warning(self, "Error", f"Failed to change theme: {str(e)}")
     
     def apply_theme(self):
         """Apply current theme"""
+        try:
+            if self.is_dark_theme:
+                self.setStyleSheet(get_dark_theme())
+            else:
+                self.setStyleSheet(get_light_theme())
+        except Exception as e:
+            logger.error(f"Error applying theme: {e}", exc_info=True)
+    
+    def apply_opacity(self):
+        """Apply window opacity"""
+        try:
+            self.setWindowOpacity(self.window_opacity)
+        except Exception as e:
+            logger.error(f"Error applying opacity: {e}", exc_info=True)
+    
+    def toggle_background_transparency(self):
+        """Toggle background transparency"""
+        try:
+            self.background_transparency = not self.background_transparency
+            self.config.set('ui', 'background_transparency', self.background_transparency)
+            
+            # Notify user that restart is required
+            QMessageBox.information(
+                self,
+                "Restart Required",
+                "Background transparency setting will take effect after restarting the application."
+            )
+            logger.info(f"Background transparency set to {self.background_transparency}")
+        except Exception as e:
+            logger.error(f"Error toggling background transparency: {e}", exc_info=True)
+    
+    def set_opacity(self, value):
+        """Set window opacity"""
+        try:
+            self.window_opacity = value / 100.0  # Convert from 0-100 to 0.0-1.0
+            self.apply_opacity()
+            self.config.set('ui', 'opacity', self.window_opacity)
+            logger.info(f"Opacity set to {self.window_opacity}")
+        except Exception as e:
+            logger.error(f"Error setting opacity: {e}", exc_info=True)
+    
+    def show_settings(self):
+        """Show settings dialog"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Settings")
+        dialog.setMinimumWidth(400)
+        dialog.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowCloseButtonHint)
+        
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(20)
+        
+        # Opacity settings
+        opacity_group = QGroupBox("Window Opacity")
+        opacity_layout = QVBoxLayout(opacity_group)
+        
+        opacity_label = QLabel(f"Opacity: {int(self.window_opacity * 100)}%")
+        opacity_layout.addWidget(opacity_label)
+        
+        opacity_slider = QSlider(Qt.Orientation.Horizontal)
+        opacity_slider.setMinimum(20)  # Minimum 20% opacity
+        opacity_slider.setMaximum(100)  # Maximum 100% opacity
+        opacity_slider.setValue(int(self.window_opacity * 100))
+        opacity_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        opacity_slider.setTickInterval(10)
+        
+        def on_opacity_change(value):
+            opacity_label.setText(f"Opacity: {value}%")
+            self.set_opacity(value)
+        
+        opacity_slider.valueChanged.connect(on_opacity_change)
+        opacity_layout.addWidget(opacity_slider)
+        
+        layout.addWidget(opacity_group)
+        
+        # Background transparency settings
+        transparency_group = QGroupBox("Background Transparency")
+        transparency_layout = QVBoxLayout(transparency_group)
+        
+        transparency_checkbox = QCheckBox("Enable transparent background (requires restart)")
+        transparency_checkbox.setChecked(self.background_transparency)
+        transparency_checkbox.stateChanged.connect(lambda: self.toggle_background_transparency())
+        transparency_layout.addWidget(transparency_checkbox)
+        
+        info_label = QLabel("⚠️ Transparent background may affect performance")
+        info_label.setStyleSheet("color: rgba(255, 200, 0, 0.8); font-size: 11px;")
+        transparency_layout.addWidget(info_label)
+        
+        layout.addWidget(transparency_group)
+        
+        # Close button
+        close_btn = QPushButton("Close")
+        close_btn.setObjectName("primaryButton")
+        close_btn.clicked.connect(dialog.accept)
+        layout.addWidget(close_btn)
+        
+        # Apply current theme to dialog
         if self.is_dark_theme:
-            self.setStyleSheet(get_dark_theme())
+            dialog.setStyleSheet(get_dark_theme())
         else:
-            self.setStyleSheet(get_light_theme())
+            dialog.setStyleSheet(get_light_theme())
+        
+        dialog.exec()
     
     def create_action_buttons(self, layout):
         """Create main action buttons"""

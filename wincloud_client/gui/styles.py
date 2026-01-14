@@ -285,6 +285,74 @@ def get_dark_theme():
     QToolButton:pressed {
         background: rgba(255, 255, 255, 0.05);
     }
+    
+    /* Dialog */
+    QDialog {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(15, 15, 20, 0.98),
+            stop:1 rgba(25, 25, 35, 0.98));
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+    }
+    
+    /* Slider */
+    QSlider::groove:horizontal {
+        background: rgba(20, 20, 30, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        height: 8px;
+        border-radius: 4px;
+    }
+    
+    QSlider::handle:horizontal {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(100, 70, 255, 0.9),
+            stop:1 rgba(70, 130, 255, 0.9));
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        width: 18px;
+        margin: -6px 0;
+        border-radius: 9px;
+    }
+    
+    QSlider::handle:horizontal:hover {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(120, 90, 255, 1),
+            stop:1 rgba(90, 150, 255, 1));
+        border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    QSlider::sub-page:horizontal {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(100, 70, 255, 0.7),
+            stop:1 rgba(70, 130, 255, 0.7));
+        border-radius: 4px;
+    }
+    
+    /* CheckBox */
+    QCheckBox {
+        color: rgba(255, 255, 255, 0.85);
+        spacing: 8px;
+    }
+    
+    QCheckBox::indicator {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        background: rgba(20, 20, 30, 0.6);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    QCheckBox::indicator:hover {
+        background: rgba(40, 40, 60, 0.6);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    QCheckBox::indicator:checked {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(100, 70, 255, 0.9),
+            stop:1 rgba(70, 130, 255, 0.9));
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        image: url(data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>);
+    }
     """
 
 def get_light_theme():
@@ -433,5 +501,73 @@ def get_light_theme():
         border-bottom-right-radius: 16px;
         color: rgba(60, 60, 80, 0.8);
         padding: 4px;
+    }
+    
+    /* Dialog */
+    QDialog {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+            stop:0 rgba(245, 245, 250, 0.98),
+            stop:1 rgba(235, 235, 245, 0.98));
+        border: 1px solid rgba(200, 200, 220, 0.5);
+        border-radius: 16px;
+    }
+    
+    /* Slider */
+    QSlider::groove:horizontal {
+        background: rgba(220, 220, 235, 0.6);
+        border: 1px solid rgba(200, 200, 220, 0.4);
+        height: 8px;
+        border-radius: 4px;
+    }
+    
+    QSlider::handle:horizontal {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(100, 70, 255, 0.9),
+            stop:1 rgba(70, 130, 255, 0.9));
+        border: 2px solid rgba(100, 100, 150, 0.3);
+        width: 18px;
+        margin: -6px 0;
+        border-radius: 9px;
+    }
+    
+    QSlider::handle:horizontal:hover {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(120, 90, 255, 1),
+            stop:1 rgba(90, 150, 255, 1));
+        border: 2px solid rgba(100, 100, 150, 0.5);
+    }
+    
+    QSlider::sub-page:horizontal {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(100, 70, 255, 0.7),
+            stop:1 rgba(70, 130, 255, 0.7));
+        border-radius: 4px;
+    }
+    
+    /* CheckBox */
+    QCheckBox {
+        color: rgba(40, 40, 60, 0.9);
+        spacing: 8px;
+    }
+    
+    QCheckBox::indicator {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        background: rgba(250, 250, 255, 0.8);
+        border: 2px solid rgba(200, 200, 220, 0.5);
+    }
+    
+    QCheckBox::indicator:hover {
+        background: rgba(240, 240, 255, 0.8);
+        border: 2px solid rgba(180, 180, 210, 0.6);
+    }
+    
+    QCheckBox::indicator:checked {
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 rgba(100, 70, 255, 0.9),
+            stop:1 rgba(70, 130, 255, 0.9));
+        border: 2px solid rgba(100, 100, 150, 0.5);
+        image: url(data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>);
     }
     """
